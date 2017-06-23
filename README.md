@@ -35,8 +35,7 @@ BaseActivity是一款适配布局的框架模块，能够提供沉浸式状态�
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="#3F51B5"
-        >
+        android:background="#3F51B5">
 
         <TextView
             android:id="@+id/txt_title"
