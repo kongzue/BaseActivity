@@ -49,6 +49,7 @@ import java.util.Set;
  * 半透明状态栏形式的Activity
  * 以及对原生安卓、MIUI、flyme的透明状态栏显示灰色图标文字的支持
  * 同时提供一些小工具简化开发难度
+ * 详细说明文档：https://github.com/kongzue/BaseActivity
  */
 
 public abstract class BaseActivity extends Activity {
