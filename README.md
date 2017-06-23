@@ -134,7 +134,7 @@ moveAnimation(Object obj, String perference, float aimValue, long time, long del
 
 ## 开源协议
 ```
-   Copyright Kongzue Dialog
+   Copyright Kongzue BaseActivity
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
