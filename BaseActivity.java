@@ -1,5 +1,3 @@
-package com.kongzue.baseframeplugin.frame;
-
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
@@ -31,7 +29,6 @@ import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
-import com.kongzue.baseframeplugin.util.SystemBarTintManager;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -101,23 +98,11 @@ public class BaseActivity extends Activity {
         //默认自动沉浸式
         setTranslucentStatus(true, false);
         //默认自动寻找需要作为状态栏的布局
-        try {
-            LinearLayout sysStatusBar = (LinearLayout) findViewById(R.id.sys_statusBar);
-            setStatusBarHeight(sysStatusBar);
-        } catch (Exception e) {
-
-        }
+        LinearLayout sysStatusBar = (LinearLayout) findViewById(R.id.sys_statusBar);
+        setStatusBarHeight(sysStatusBar);
         //默认自动寻找body框架并设置合理的高度
-        try {
-            LinearLayout boxBody = (LinearLayout) findViewById(R.id.box_body);
-            setBodyHeight(boxBody);
-        } catch (Exception e) {
-            try {
-                RelativeLayout boxBody = (RelativeLayout) findViewById(R.id.box_body);
-                setBodyHeight(boxBody);
-            } catch (Exception e2) {
-            }
-        }
+        ViewGroup boxBody = (ViewGroup) findViewById(R.id.box_body);
+        setBodyHeight(boxBody);
     }
 
     //MIUI判断
@@ -188,17 +173,15 @@ public class BaseActivity extends Activity {
         return 0;
     }
 
-    //设置主布局高度（屏幕高度-状态栏部分高度-底导航栏高度）
-    public void setBodyHeight(RelativeLayout layout) {
-        android.widget.FrameLayout.LayoutParams params = (android.widget.FrameLayout.LayoutParams) layout.getLayoutParams();
-        params.height = getDisPlayHeight();
-        layout.setLayoutParams(params);
-    }
-
-    public void setBodyHeight(LinearLayout layout) {
-        android.widget.FrameLayout.LayoutParams params = (android.widget.FrameLayout.LayoutParams) layout.getLayoutParams();
-        params.height = getDisPlayHeight();
-        layout.setLayoutParams(params);
+    //设置主布局高度（屏幕高度-状态栏部分高度-底导航栏高度）(New)
+    public void setBodyHeight(ViewGroup layout) {
+        try{
+            android.widget.FrameLayout.LayoutParams params = (android.widget.FrameLayout.LayoutParams) layout.getLayoutParams();
+            params.height = getDisPlayHeight();
+            layout.setLayoutParams(params);
+        }catch (Exception e){
+            log("警告！Body布局未找到：BaseActivity.setBodyHeight() : Error");
+        }
     }
 
     //设置状态栏颜色模式，参数1：是否开启；参数2：是否为夜间模式，false则导航栏为白色方案，true则导航栏为黑色方案
@@ -336,7 +319,7 @@ public class BaseActivity extends Activity {
             linearLayout.setVisibility(View.VISIBLE);
             int statusHeight = getStatusBarHeight();
             try {
-                ViewGroup.LayoutParams params = (ViewGroup.LayoutParams) linearLayout.getLayoutParams();
+                ViewGroup.LayoutParams params = linearLayout.getLayoutParams();
                 params.height = statusHeight;
                 linearLayout.setLayoutParams(params);
             } catch (Exception e) {
