@@ -1,5 +1,3 @@
-package com.kongzue.baseframe;
-
 import android.os.Bundle;
 import android.widget.LinearLayout;
 import android.widget.TextView;
