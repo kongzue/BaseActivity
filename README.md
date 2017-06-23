@@ -127,7 +127,7 @@ dip2px(Context context, float dpValue);
 //申请权限（0x0001是返回值，需要的可以重写onRequestPermissionsResult做回调处理）：
 requestPermission(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION
                 , Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN}, 0x0001);
-//位移动画：
+//属性动画：
 moveAnimation(Object obj, String perference, float aimValue, long time, long delay);
 ```
 4.0版本说明：http://www.jianshu.com/p/3905683c5df1
