@@ -1,5 +1,5 @@
 # BaseActivity
-BaseActivity是一款能够提供沉浸式状态栏，可调用黑色状态栏模式，判断了小米MIUI和flyme系统独立的黑色状态栏样式可独立调用，并提供了一些简单的吐司和生成日志的方法的基础Activity类，可以直接将您项目中的Activity继成BaseActivity使用。
+BaseActivity是一款适配布局的框架模块，能够提供沉浸式状态栏，可调用黑色状态栏模式，判断了小米MIUI和flyme系统独立的黑色状态栏样式可独立调用，并提供了一些简单的吐司和生成日志的方法的基础Activity类，可以直接将您项目中的Activity继成BaseActivity使用。
 如何更加优雅的编写代码是BaseActivity存在的主要目的，也是本代码诞生的原因。
 
 ## 5.0更新说明：
