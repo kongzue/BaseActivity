@@ -51,7 +51,7 @@ import java.util.Set;
  * 同时提供一些小工具简化开发难度
  */
 
-public class BaseActivity extends Activity {
+public abstract class BaseActivity extends Activity {
 
     public RequestQueue mQueue;            //Volley请求队列
     public Activity me = this;
@@ -81,17 +81,12 @@ public class BaseActivity extends Activity {
         setEvent();
     }
 
-    public void initViews() {
+    //可被重写的接口
+    public abstract void initViews();
 
-    }
+    public abstract void initDatas();
 
-    public void initDatas() {
-
-    }
-
-    public void setEvent() {
-
-    }
+    public abstract void setEvent();
 
     //自动沉浸式
     public void initStyle() {
