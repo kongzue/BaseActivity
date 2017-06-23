@@ -72,9 +72,9 @@ public class MainActivity extends AppCompatActivity {
 }
 ```
 注意哦，重点开始了！
-1.先删除继承的AppCompatActivity，转而继承我们的BaseActivity，
-2.在onCreate方法中使用super.onCreate(Bundle,layoutRes)，
-3.重写三个方法initViews()、initDatas()、setEvent()，此处重写三个方法的原因是这些方法会依次自动被执行，我们保留了super.onCreate(Bundle)的原始方法，并提供了新的两个参数的onCreate方法，若使用此方法加载布局，则会直接依次执行initViews()、initStyle()、initDatas()和setEvent()。
+1) 先删除继承的AppCompatActivity，转而继承我们的BaseActivity，
+2) 在onCreate方法中使用super.onCreate(Bundle,layoutRes)，
+3) 重写三个方法initViews()、initDatas()、setEvent()，此处重写三个方法的原因是这些方法会依次自动被执行，我们保留了super.onCreate(Bundle)的原始方法，并提供了新的两个参数的onCreate方法，若使用此方法加载布局，则会直接依次执行initViews()、initStyle()、initDatas()和setEvent()。
 注意，沉浸式方法initStyle()该方法不需要重写，会自动执行。默认会对状态栏进行的是白色主题的适配，如有黑色主题的需要，请单独执行setTranslucentStatus(true, true)方法即可。
 点击Android Studio的Code -> Override Methods... 菜单，重写上述方法，并设置super.onCreate(savedInstanceState,R.layout.activity_main)加载布局：
 ```
