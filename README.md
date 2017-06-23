@@ -110,7 +110,7 @@ public class MainActivity extends BaseActivity {
 }
 
 ```
-BaceActivity5.0版本旨在帮助开发者明晰代码结构与布局，轻松完成适配工作，同样的，也提供了更为完善的小工具，例如简易吐司、简易Log日志、控制键盘开启关闭、dpi与px双向计算转换、Android6.0以上权限申请、位移动画。
+BaceActivity5.0版本旨在帮助开发者明晰代码结构与布局，轻松完成适配工作，同样的，也提供了更为完善的小工具，例如简易吐司、简易Log日志、控制键盘开启关闭、dpi与px双向计算转换、Android6.0以上权限申请、属性动画。
 
 小工具调用方法说明：
 ```
