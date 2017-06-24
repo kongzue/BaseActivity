@@ -119,7 +119,7 @@ BaceActivity5.0版本旨在帮助开发者明晰代码结构与布局，轻松�
 2) 建议在内容部分外嵌套一个ScrollView，并在内容部分的容器View中使用：
 ```
      android:layout_height="wrap_content"
-     android:fitsSystemWindows="true“
+     android:fitsSystemWindows="true"
 ```
 在键盘弹起时布局会自动上移且内容部分的输入框可以上弹到屏幕视野内，从而解决沉浸式键盘无法上移的问题。
 
