@@ -111,7 +111,21 @@ public class MainActivity extends BaseActivity {
 ```
 BaceActivity5.0版本旨在帮助开发者明晰代码结构与布局，轻松完成适配工作，同样的，也提供了更为完善的小工具，例如简易吐司、简易Log日志、控制键盘开启关闭、dpi与px双向计算转换、Android6.0以上权限申请、属性动画。
 
-小工具调用方法说明：
+### 其他一些建议
+
+![Kongzue BaseActivity 适配方案与建议.png](http://upload-images.jianshu.io/upload_images/1976622-17171d853f2fcc9f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+1) 约定布局：占位布局sys_statusBar是为了将Activity中的主体部分（包含标题栏和内容）向下挤压以免其位置与系统状态栏存在的位置重叠，且在Android4.4以下版本（不支持沉浸式的版本）下sys_statusBar布局，会隐藏，以系统黑色状态栏为呈现方式。
+2) 建议在内容部分外嵌套一个ScrollView，并在内容部分的容器View中使用：
+```
+     android:layout_height="wrap_content"
+     android:fitsSystemWindows="true“
+```
+在键盘弹起时布局会自动上移且内容部分的输入框可以上弹到屏幕视野内，从而解决沉浸式键盘无法上移的问题。
+
+BaceActivity5.0版本旨在帮助开发者明晰代码结构与布局，轻松完成适配工作，同样的，也提供了更为完善的小工具，例如简易吐司、简易Log日志、控制键盘开启关闭、dpi与px双向计算转换、Android6.0以上权限申请、属性动画。
+
+### 小工具调用方法说明
 ```
 //简易吐司：
 toast(Obj);
