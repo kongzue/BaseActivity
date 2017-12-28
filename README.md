@@ -14,13 +14,9 @@ BaseActivity是一款适配布局的框架模块，能够提供沉浸式状态�
 - 整理代码逻辑；
 ### 约束
 1) 6.0版本的BaseActivity为了更快更有效的完成Activity创建，因此特定的编写了一些自动化执行方法，如果开发者遵循我们的编写流程和方案，可以快速完成各Android系统UI布局的适配操作以界面的沉浸式。
-
 一般Activity需要完成的事项主要由以下及部分组成：
-
 加载布局、处理适配问题、加载数据、控件组件绑定事件
-
 对应的，我们在BaseActivity中提供了相对应的方法initViews()、initDatas()、setEvent()，用户继承对应的方法并重写其代码，BaseActivity会自动依次执行并对适配相关的事情进行处理。
-
 2) 为方便适配沉浸式，请在Activity的layout布局的内容部分使用 android:fitsSystemWindows="true" 加以约束，此时内容布局会自动缩小为顶部状态栏及底部导航栏以内的位置：
 ```
 <?xml version="1.0" encoding="utf-8"?>
