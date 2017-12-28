@@ -1,35 +1,24 @@
 import android.animation.ObjectAnimator;
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
-import android.graphics.Color;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Display;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
-
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -43,162 +32,62 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-
 /**
- * Ver.5.0
- * 半透明状态栏形式的Activity
+ * Ver.6.0
+ * 自动化代码流水线作业
  * 以及对原生安卓、MIUI、flyme的透明状态栏显示灰色图标文字的支持
  * 同时提供一些小工具简化开发难度
  * 详细说明文档：https://github.com/kongzue/BaseActivity
  */
 
-public abstract class BaseActivity extends Activity {
+public abstract class BaseActivity extends AppCompatActivity {
+
+    public BaseActivity me = this;
 
     public RequestQueue mQueue;            //Volley请求队列
-    public Activity me = this;
-    protected SystemBarTintManager mTintManager;
-
-    private static final String KEY_MIUI_VERSION_CODE = "ro.miui.ui.version.code";
-    private static final String KEY_MIUI_VERSION_NAME = "ro.miui.ui.version.name";
-    private static final String KEY_MIUI_INTERNAL_STORAGE = "ro.miui.internal.storage";
-
-    //基础方法
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mTintManager = new SystemBarTintManager(this);
-        mQueue = Volley.newRequestQueue(this);         //创建请求队列
-    }
 
     //使用本方法创建Activity则会自动执行沉浸式
     protected void onCreate(Bundle savedInstanceState, int layoutResId) {
         super.onCreate(savedInstanceState);
         setContentView(layoutResId);
-        mTintManager = new SystemBarTintManager(this);
         mQueue = Volley.newRequestQueue(this);         //Volley创建请求队列
 
         initViews();
-        initStyle();
         initDatas();
-        setEvent();
+        setEvents();
     }
 
-    //可被重写的接口
-    public abstract void initViews();
-
-    public abstract void initDatas();
-
-    public abstract void setEvent();
-
-    //自动沉浸式
-    public void initStyle() {
-        //默认自动沉浸式
-        setTranslucentStatus(true, false);
-        //默认自动寻找需要作为状态栏的布局
-        LinearLayout sysStatusBar = (LinearLayout) findViewById(R.id.sys_statusBar);
-        setStatusBarHeight(sysStatusBar);
-        //默认自动寻找body框架并设置合理的高度
-        ViewGroup boxBody = (ViewGroup) findViewById(R.id.box_body);
-        setBodyHeight(boxBody);
+    //基础方法
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mQueue = Volley.newRequestQueue(this);         //创建请求队列
     }
 
-    //MIUI判断
-    public static boolean isMIUI() {
-        try {
-            final BuildProperties prop = BuildProperties.newInstance();
-            return prop.getProperty(KEY_MIUI_VERSION_CODE, null) != null || prop.getProperty(KEY_MIUI_VERSION_NAME, null) != null || prop.getProperty(KEY_MIUI_INTERNAL_STORAGE, null) != null;
-        } catch (final IOException e) {
-            return false;
-        }
-    }
-
-    //Flyme判断
-    public static boolean isFlyme() {
-        try {
-            final Method method = Build.class.getMethod("hasSmartBar");
-
-            return method != null;
-        } catch (final Exception e) {
-            return false;
-        }
-    }
-
-    // 获取魅族SmartBar高度
-    public float getSmartBarHeight(Context context) {
-        final boolean isMeiZu = Build.MANUFACTURER.equals("Meizu");
-
-        final boolean autoHideSmartBar = Settings.System.getInt(context.getContentResolver(),
-                "mz_smartbar_auto_hide", 0) == 1;
-
-        if (isMeiZu) {
-            if (autoHideSmartBar) {
-                return 0;
-            } else {
-                try {
-                    Class c = Class.forName("com.android.internal.R$dimen");
-                    Object obj = c.newInstance();
-                    Field field = c.getField("mz_action_button_min_height");
-                    int height = Integer.parseInt(field.get(obj).toString());
-                    return context.getResources().getDimensionPixelSize(height);
-                } catch (Throwable e) { // 不自动隐藏smartbar同时又没有smartbar高度字段供访问，取系统navigationbar的高度
-                    return getNormalNavigationBarHeight(context);
-                }
-            }
-        } else {
-            return 0;
-            //return getNormalNavigationBarHeight(context) / metrics.density;
-        }
-    }
-
-    //获取底栏导航栏高度
-    protected static float getNormalNavigationBarHeight(final Context ctx) {
-        try {
-            final Resources res = ctx.getResources();
-            int rid = res.getIdentifier("config_showNavigationBar", "bool", "android");
-            if (rid > 0) {
-                boolean flag = res.getBoolean(rid);
-                if (flag) {
-                    int resourceId = res.getIdentifier("navigation_bar_height", "dimen", "android");
-                    if (resourceId > 0) {
-                        return res.getDimensionPixelSize(resourceId);
-                    }
-                }
-            }
-        } catch (Throwable e) {
-            return 0;
-        }
-        return 0;
-    }
-
-    //设置主布局高度（屏幕高度-状态栏部分高度-底导航栏高度）(New)
-    public void setBodyHeight(ViewGroup layout) {
-        try{
-            android.widget.FrameLayout.LayoutParams params = (android.widget.FrameLayout.LayoutParams) layout.getLayoutParams();
-            params.height = getDisPlayHeight();
-            layout.setLayoutParams(params);
-        }catch (Exception e){
-            log("警告！Body布局未找到：BaseActivity.setBodyHeight() : Error");
-        }
-    }
-
-    //设置状态栏颜色模式，参数1：是否开启；参数2：是否为夜间模式，false则导航栏为白色方案，true则导航栏为黑色方案
-    protected void setTranslucentStatus(boolean on, boolean darkmode) {
+    //状态栏主题
+    protected void setTranslucentStatus(boolean on, boolean whiteMode) {
         Log.i("SDK_INT", Build.VERSION.SDK_INT + "");
-        if (isMIUI()) setStatusBarDarkModeInMIUI(darkmode, this);
-        if (isFlyme()) setStatusBarDarkIconInFlyme(getWindow(), darkmode);
+        if (isMIUI()) setStatusBarDarkModeInMIUI(whiteMode, this);
+        if (isFlyme()) setStatusBarDarkIconInFlyme(getWindow(), whiteMode);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Window window = getWindow();
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
                     | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+
+            if (whiteMode) {
+                window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            }else{
+                window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            }
+
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(Color.TRANSPARENT);
             window.setNavigationBarColor(Color.BLACK);
 
-            if (darkmode)
-                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-            getWindow().setStatusBarColor(Color.TRANSPARENT);
             return;
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             Window win = getWindow();
@@ -254,6 +143,31 @@ public abstract class BaseActivity extends Activity {
         return result;
     }
 
+    private static final String KEY_MIUI_VERSION_CODE = "ro.miui.ui.version.code";
+    private static final String KEY_MIUI_VERSION_NAME = "ro.miui.ui.version.name";
+    private static final String KEY_MIUI_INTERNAL_STORAGE = "ro.miui.internal.storage";
+
+    //MIUI判断
+    public static boolean isMIUI() {
+        try {
+            final BuildProperties prop = BuildProperties.newInstance();
+            return prop.getProperty(KEY_MIUI_VERSION_CODE, null) != null || prop.getProperty(KEY_MIUI_VERSION_NAME, null) != null || prop.getProperty(KEY_MIUI_INTERNAL_STORAGE, null) != null;
+        } catch (final IOException e) {
+            return false;
+        }
+    }
+
+    //Flyme判断
+    public static boolean isFlyme() {
+        try {
+            final Method method = Build.class.getMethod("hasSmartBar");
+
+            return method != null;
+        } catch (final Exception e) {
+            return false;
+        }
+    }
+    
     public static class BuildProperties {
 
         private final Properties properties;
@@ -306,37 +220,14 @@ public abstract class BaseActivity extends Activity {
         public static BuildProperties newInstance() throws IOException {
             return new BuildProperties();
         }
-
     }
+    
+    //可被重写的接口
+    public abstract void initViews();
 
-    //设置占位符布局(New)
-    public void setStatusBarHeight(LinearLayout linearLayout) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            linearLayout.setVisibility(View.VISIBLE);
-            int statusHeight = getStatusBarHeight();
-            try {
-                ViewGroup.LayoutParams params = linearLayout.getLayoutParams();
-                params.height = statusHeight;
-                linearLayout.setLayoutParams(params);
-            } catch (Exception e) {
-                log("警告！状态栏占位符布局的父布局类型无法确认：BaseActivity.setStatusBarHeight() : Error");
-            }
-        }
-    }
+    public abstract void initDatas();
 
-    //获取状态栏的高度
-    public int getStatusBarHeight() {
-        try {
-            Class<?> c = Class.forName("com.android.internal.R$dimen");
-            Object obj = c.newInstance();
-            Field field = c.getField("status_bar_height");
-            int x = Integer.parseInt(field.get(obj).toString());
-            return getResources().getDimensionPixelSize(x);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return 0;
-    }
+    public abstract void setEvents();
 
     protected final static String NULL = "";
     private Toast toast;
@@ -437,7 +328,7 @@ public abstract class BaseActivity extends Activity {
      * @param permissions
      * @return
      */
-    private boolean checkPermissions(String[] permissions) {
+    public boolean checkPermissions(String[] permissions) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return true;
         }
@@ -558,8 +449,7 @@ public abstract class BaseActivity extends Activity {
         Display disp = getWindowManager().getDefaultDisplay();
         Point outP = new Point();
         disp.getSize(outP);
-        int sviewHeight = outP.x;
-        return sviewHeight;
+        return outP.x;
     }
 
     //获取屏幕可用部分高度（屏幕高度-状态栏高度-屏幕底栏高度）
@@ -567,12 +457,7 @@ public abstract class BaseActivity extends Activity {
         Display disp = getWindowManager().getDefaultDisplay();
         Point outP = new Point();
         disp.getSize(outP);
-        log("ScreenHeight:" + (int) outP.y);
-        log("SmartBarHeight:" + (int) getSmartBarHeight(this));
-        log("NavbarHeight:" + (int) getNavbarHeight());
-        log("StatusBarHeight:" + (int) getStatusBarHeight());
-        int sviewHeight = outP.y - (int) getSmartBarHeight(this) - (int) getNavbarHeight() + getStatusBarHeight() * 2;
-        return sviewHeight;
+        return outP.y;
     }
 
     public int getNavbarHeight() {
@@ -590,7 +475,9 @@ public abstract class BaseActivity extends Activity {
         ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(obj, perference, aimValue);
         objectAnimator.setDuration(time);
         objectAnimator.setStartDelay(delay);
-        objectAnimator.setAutoCancel(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            objectAnimator.setAutoCancel(true);
+        }
         objectAnimator.start();
         return objectAnimator;
     }
