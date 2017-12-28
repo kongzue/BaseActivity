@@ -51,7 +51,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(layoutResId);
         mQueue = Volley.newRequestQueue(this);         //Volley创建请求队列
-
+        setTranslucentStatus(true, false);
         initViews();
         initDatas();
         setEvents();
