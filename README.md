@@ -123,6 +123,7 @@ moveAnimation(Object obj, String perference, float aimValue, long time, long del
 ```
 
 5.0版本说明：https://www.jianshu.com/p/ea92b765a946
+
 4.0版本说明：http://www.jianshu.com/p/3905683c5df1
 
 ## 开源协议
