@@ -3,13 +3,13 @@ BaseActivity是一款适配布局的框架模块，能够提供沉浸式状态�
 如何更加优雅的编写代码是BaseActivity存在的主要目的，也是本代码诞生的原因。
 
 ## 6.0更新说明：
-删除冗余代码；
+- 删除冗余代码；
 
-将BaseActivity继承改为AppCompatActivity，方便权限回调；
+- 将BaseActivity继承改为AppCompatActivity，方便权限回调；
 
-取消了initStyle();方法，改为更切合原生的沉浸式适配方式；
+- 取消了initStyle();方法，改为更切合原生的沉浸式适配方式；
 
-取消了sys_statusBar布局适配的必要性，采用更简单的方式适配沉浸式；
+- 取消了sys_statusBar布局适配的必要性，采用更简单的方式适配沉浸式；
 
 整理代码逻辑；
 ### 约束
