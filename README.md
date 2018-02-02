@@ -5,7 +5,7 @@ BaseActivity是一款适配布局的框架模块，能够提供沉浸式状态�
 ## 6.0.1 更新说明：
 - 删除冗余代码；
 
-- 删除Volley相关调用，若需要请直接使用BaseVolley(https://github.com/kongzue/BaseVolley)或BaseOkHttp(https://github.com/kongzue/BaseOkHttp)；
+- 删除Volley相关调用，若需要请直接使用BaseVolley( https://github.com/kongzue/BaseVolley )或BaseOkHttp( https://github.com/kongzue/BaseOkHttp )；
 
 - SystemBarTintManager提供了import提示；
 
