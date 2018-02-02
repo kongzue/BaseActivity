@@ -1,12 +1,15 @@
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -14,11 +17,13 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Display;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -33,7 +38,7 @@ import java.util.Properties;
 import java.util.Set;
 
 /**
- * Ver.6.0
+ * Ver.6.0.1
  * 自动化代码流水线作业
  * 以及对原生安卓、MIUI、flyme的透明状态栏显示灰色图标文字的支持
  * 同时提供一些小工具简化开发难度
@@ -44,13 +49,10 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public BaseActivity me = this;
 
-    public RequestQueue mQueue;            //Volley请求队列
-
     //使用本方法创建Activity则会自动执行沉浸式
     protected void onCreate(Bundle savedInstanceState, int layoutResId) {
         super.onCreate(savedInstanceState);
         setContentView(layoutResId);
-        mQueue = Volley.newRequestQueue(this);         //Volley创建请求队列
         setTranslucentStatus(true, false);
         initViews();
         initDatas();
@@ -60,7 +62,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     //基础方法
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mQueue = Volley.newRequestQueue(this);         //创建请求队列
     }
 
     //状态栏主题
@@ -167,7 +168,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             return false;
         }
     }
-    
+
     public static class BuildProperties {
 
         private final Properties properties;
@@ -221,7 +222,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             return new BuildProperties();
         }
     }
-    
+
     //可被重写的接口
     public abstract void initViews();
 
